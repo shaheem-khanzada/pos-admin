@@ -2,23 +2,20 @@ import type { CollectionConfig } from 'payload'
 
 import { assignTenantFromHeader } from '../hooks/assignTenantFromHeader'
 
-export const Media: CollectionConfig = {
-  slug: 'media',
-  access: {
-    read: () => true,
+export const Categories: CollectionConfig = {
+  slug: 'categories',
+  admin: {
+    useAsTitle: 'title',
+    group: 'Content',
   },
   hooks: {
     beforeChange: [assignTenantFromHeader],
   },
   fields: [
     {
-      name: 'alt',
+      name: 'title',
       type: 'text',
       required: true,
-    },
+    }
   ],
-  upload: {
-    adminThumbnail: ({ doc }) => `http://localhost:3000/api/media/file/${doc.filename}`,
-  },
-
 }
