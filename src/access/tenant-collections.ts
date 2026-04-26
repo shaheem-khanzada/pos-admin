@@ -49,9 +49,6 @@ export const canReadTenantCollection: Access = ({ req }) => {
   if (isSuperAdminAccess({ req })) return true
 
   const tenantId = getSelectedTenantId(req)
-  console.log('tenantId??', tenantId)
-  console.log('isSuperAdminAccess({ req })', isSuperAdminAccess({ req }))
-  console.log('req.user', req.user)
   const userTenantIds = getUserTenantIds(req.user as any)
 
   if (!tenantId) {

@@ -21,6 +21,10 @@ type MenuProduct = {
 }
 
 const tenantName = 'KFC'
+const adminOpOptions = {
+  disableTransaction: true,
+  overrideAccess: true,
+} as const
 
 const productImageSources: Record<string, string> = {
   'KFC Zinger Burger':
@@ -81,6 +85,7 @@ const fetchImageAsUploadFile = async (label: string) => {
 
 const ensureTenant = async (payload: Awaited<ReturnType<typeof getPayload>>): Promise<any> => {
   const existing = await payload.find({
+    ...adminOpOptions,
     collection: 'tenants',
     depth: 0,
     limit: 1,
@@ -91,6 +96,7 @@ const ensureTenant = async (payload: Awaited<ReturnType<typeof getPayload>>): Pr
   if (existing.docs[0]) return existing.docs[0]
 
   return payload.create({
+    ...adminOpOptions,
     collection: 'tenants',
     data: { name: tenantName },
   } as any)
@@ -102,6 +108,7 @@ const ensureCategory = async (
   title: string,
 ): Promise<any> => {
   const existing = await payload.find({
+    ...adminOpOptions,
     collection: 'categories',
     depth: 0,
     limit: 1,
@@ -114,6 +121,7 @@ const ensureCategory = async (
   if (existing.docs[0]) return existing.docs[0]
 
   return payload.create({
+    ...adminOpOptions,
     collection: 'categories',
     data: { tenant: tenantId, title },
   } as any)
@@ -126,6 +134,7 @@ const ensureVariantType = async (
   label: string,
 ): Promise<any> => {
   const existing = await payload.find({
+    ...adminOpOptions,
     collection: 'variantTypes',
     depth: 0,
     limit: 1,
@@ -138,6 +147,7 @@ const ensureVariantType = async (
   if (existing.docs[0]) return existing.docs[0]
 
   return payload.create({
+    ...adminOpOptions,
     collection: 'variantTypes',
     data: { tenant: tenantId, name, label },
   } as any)
@@ -151,6 +161,7 @@ const ensureVariantOption = async (
   value: string,
 ): Promise<any> => {
   const existing = await payload.find({
+    ...adminOpOptions,
     collection: 'variantOptions',
     depth: 0,
     limit: 1,
@@ -167,6 +178,7 @@ const ensureVariantOption = async (
   if (existing.docs[0]) return existing.docs[0]
 
   return payload.create({
+    ...adminOpOptions,
     collection: 'variantOptions',
     data: { tenant: tenantId, variantType: variantTypeId, label, value },
   } as any)
@@ -178,6 +190,7 @@ const ensureMedia = async (
   alt: string,
 ): Promise<any> => {
   const existing = await payload.find({
+    ...adminOpOptions,
     collection: 'media',
     depth: 0,
     limit: 1,
@@ -190,6 +203,7 @@ const ensureMedia = async (
   if (existing.docs[0]) return existing.docs[0]
 
   return payload.create({
+    ...adminOpOptions,
     collection: 'media',
     data: { tenant: tenantId, alt },
     file: await fetchImageAsUploadFile(alt),
@@ -206,6 +220,7 @@ const ensureProduct = async (
   const categoryIds = product.categories.map((category) => categoryMap[category]).filter(Boolean)
 
   const existing = await payload.find({
+    ...adminOpOptions,
     collection: 'products',
     depth: 0,
     limit: 1,
@@ -217,6 +232,7 @@ const ensureProduct = async (
 
   if (existing.docs[0]) {
     return payload.update({
+      ...adminOpOptions,
       collection: 'products',
       id: existing.docs[0].id,
       data: {
@@ -234,6 +250,7 @@ const ensureProduct = async (
   }
 
   return payload.create({
+    ...adminOpOptions,
     collection: 'products',
     data: {
       title: product.title,
@@ -258,6 +275,7 @@ const recreateVariants = async (
   productBarcode: string,
 ) => {
   await payload.delete({
+    ...adminOpOptions,
     collection: 'variants',
     where: {
       and: [{ tenant: { equals: tenantId } }, { product: { equals: productId } }],
@@ -266,6 +284,7 @@ const recreateVariants = async (
 
   for (const variant of variants) {
     await payload.create({
+      ...adminOpOptions,
       collection: 'variants',
       data: {
         barcode: `${productBarcode}-${variant.barcodeSuffix}`,

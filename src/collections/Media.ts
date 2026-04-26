@@ -17,8 +17,4 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: {
-    adminThumbnail: ({ doc }) => `http://localhost:3000/api/media/file/${doc.filename}`,
-  },
-
 }

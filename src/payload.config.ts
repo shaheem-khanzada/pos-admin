@@ -4,7 +4,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
-
+import { s3Storage } from '@payloadcms/storage-s3'
 import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
 import { en } from '@payloadcms/plugin-ecommerce/translations/languages/en'
 
@@ -46,6 +46,11 @@ export default buildConfig({
   cors: ['http://localhost:8081', 'http://localhost:3000'],
   csrf: ['http://localhost:8081', 'http://localhost:3000'],
   collections: [Users, Media, Categories, Tenants, VariantTypes, VariantOptions, Products, Variants, Carts],
+  upload: {
+    limits: {
+      fileSize: 10000000, // 10MB, written in bytes
+    },
+  },
   i18n: {
     fallbackLanguage: 'en',
     translations: {
@@ -59,6 +64,9 @@ export default buildConfig({
   },
   db: mongooseAdapter({
     url: process.env.MONGODB_URI || '',
+    connectOptions: {
+      dbName: 'pos-admin',
+    },
   }),
   sharp,
   plugins: [
@@ -73,6 +81,28 @@ export default buildConfig({
         variantOptions: { accessResultOverride: tenantCollectionAccessOverride },
       },
       userHasAccessToAllTenants: (user) => isSuperAdmin(user),
+    }),
+    s3Storage({
+      enabled: Boolean(process.env.R2_BUCKET),
+      collections: {
+        media: {
+          disablePayloadAccessControl: true,
+          generateFileURL: ({ filename, prefix }) => {
+            const key = prefix ? `${prefix}/${filename}` : filename
+            return `${process.env.R2_PUBLIC_URL}/${key}`
+          },
+        },
+      },
+      bucket: process.env.R2_BUCKET || '',
+      config: {
+        credentials: {
+          accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+        },
+        region: 'auto',
+        endpoint: process.env.R2_ENDPOINT,
+        forcePathStyle: true,
+      },
     }),
   ],
 })
