@@ -34,12 +34,14 @@ export const Products: CollectionConfig = {
       name: 'title',
       type: 'text',
       label: 'Name',
+      index: true,
       required: true,
     },
     {
       name: 'barcode',
       type: 'text',
       label: 'Barcode',
+      index: true,
       admin: {
         position: 'sidebar',
       },

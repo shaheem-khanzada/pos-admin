@@ -43,8 +43,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  cors: ['http://localhost:8081', 'http://localhost:3000'],
-  csrf: ['http://localhost:8081', 'http://localhost:3000'],
+  cors: '*',
+  csrf: ['*'],
   collections: [Users, Media, Categories, Tenants, VariantTypes, VariantOptions, Products, Variants, Carts],
   upload: {
     limits: {

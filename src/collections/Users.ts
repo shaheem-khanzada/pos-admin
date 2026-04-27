@@ -23,7 +23,7 @@ export const Users: CollectionConfig = {
       type: 'select',
       required: true,
       saveToJWT: true,
-      defaultValue: 'user',
+      defaultValue: 'super-admin',
       options: [
         { label: 'Super admin', value: 'super-admin' },
         { label: 'User', value: 'user' },

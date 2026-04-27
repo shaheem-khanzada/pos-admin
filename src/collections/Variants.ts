@@ -26,6 +26,7 @@ export const Variants: CollectionConfig = {
       name: 'barcode',
       type: 'text',
       label: 'Barcode',
+      index: true,
       admin: {
         position: 'sidebar',
       },
