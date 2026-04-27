@@ -43,8 +43,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  cors: '*',
-  csrf: ['*'],
+  cors: ['http://localhost:3000', 'https://pos-admin-iota-three.vercel.app', 'http://y44ck4k0wwcogc4ccoogwsw4.72.60.192.24.sslip.io'],
+  csrf: ['http://localhost:3000', 'https://pos-admin-iota-three.vercel.app', 'http://y44ck4k0wwcogc4ccoogwsw4.72.60.192.24.sslip.io'],
   collections: [Users, Media, Categories, Tenants, VariantTypes, VariantOptions, Products, Variants, Carts],
   upload: {
     limits: {
@@ -81,6 +81,7 @@ export default buildConfig({
         variantOptions: { accessResultOverride: tenantCollectionAccessOverride },
       },
       userHasAccessToAllTenants: (user) => isSuperAdmin(user),
+      useUsersTenantFilter: false,
     }),
     s3Storage({
       enabled: Boolean(process.env.R2_BUCKET),
