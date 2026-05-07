@@ -12,6 +12,7 @@ services:
     command: sh -c "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm dev"
     depends_on:
       - mongo
+      - clickhouse
       # - postgres
     env_file:
       - .env
@@ -28,6 +29,23 @@ services:
     logging:
       driver: none
 
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.10
+    hostname: clickhouse
+    ports:
+      - '8123:8123'
+      - '9000:9000'
+    environment:
+      CLICKHOUSE_DB: pos_analytics
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./server/clickhouse/init:/docker-entrypoint-initdb.d:ro
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
   # Uncomment the following to use postgres
   # postgres:
   #   restart: always
@@ -39,5 +57,6 @@ services:
 
 volumes:
   data:
+  clickhouse_data:
   # pgdata:
   node_modules:

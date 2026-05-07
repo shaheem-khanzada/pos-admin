@@ -190,6 +190,7 @@ export interface Media {
   alt: string;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   url?: string | null;
   thumbnailURL?: string | null;
   filename?: string | null;
@@ -210,6 +211,7 @@ export interface Category {
   title: string;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -258,7 +260,7 @@ export interface Product {
   barcode?: string | null;
   description?: string | null;
   categories: (string | Category)[];
-  media: string | Media;
+  media?: (string | null) | Media;
   inventory?: number | null;
   enableVariants?: boolean | null;
   variantTypes?: (string | VariantType)[] | null;
@@ -269,6 +271,11 @@ export interface Product {
   };
   priceInPKREnabled?: boolean | null;
   priceInPKR?: number | null;
+  /**
+   * Enable to record unit cost for Gross Profit reporting.
+   */
+  costInPKREnabled?: boolean | null;
+  costInPKR?: number | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -295,6 +302,11 @@ export interface Variant {
   inventory?: number | null;
   priceInPKREnabled?: boolean | null;
   priceInPKR?: number | null;
+  /**
+   * Enable to record unit cost for Gross Profit reporting.
+   */
+  costInPKREnabled?: boolean | null;
+  costInPKR?: number | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -311,6 +323,8 @@ export interface Cart {
         product?: (string | null) | Product;
         variant?: (string | null) | Variant;
         quantity: number;
+        unitPriceInPKR?: number | null;
+        unitCostInPKR?: number | null;
         id?: string | null;
       }[]
     | null;
@@ -319,11 +333,15 @@ export interface Cart {
   status?: ('active' | 'purchased' | 'abandoned') | null;
   subtotal?: number | null;
   currency?: 'PKR' | null;
-  customerName: string;
+  cogsTotal?: number | null;
+  grossProfit?: number | null;
+  customerName?: string | null;
   customerPhone?: string | null;
+  discount?: number | null;
   paymentMethod: 'cash' | 'online';
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -465,6 +483,7 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
   url?: T;
   thumbnailURL?: T;
   filename?: T;
@@ -484,6 +503,7 @@ export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -538,6 +558,8 @@ export interface ProductsSelect<T extends boolean = true> {
   variants?: T;
   priceInPKREnabled?: T;
   priceInPKR?: T;
+  costInPKREnabled?: T;
+  costInPKR?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -557,6 +579,8 @@ export interface VariantsSelect<T extends boolean = true> {
   inventory?: T;
   priceInPKREnabled?: T;
   priceInPKR?: T;
+  costInPKREnabled?: T;
+  costInPKR?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -573,6 +597,8 @@ export interface CartsSelect<T extends boolean = true> {
         product?: T;
         variant?: T;
         quantity?: T;
+        unitPriceInPKR?: T;
+        unitCostInPKR?: T;
         id?: T;
       };
   secret?: T;
@@ -580,11 +606,15 @@ export interface CartsSelect<T extends boolean = true> {
   status?: T;
   subtotal?: T;
   currency?: T;
+  cogsTotal?: T;
+  grossProfit?: T;
   customerName?: T;
   customerPhone?: T;
+  discount?: T;
   paymentMethod?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

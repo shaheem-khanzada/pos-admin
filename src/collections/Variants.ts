@@ -16,6 +16,7 @@ const variantsBase = createVariantsCollection({
 
 export const Variants: CollectionConfig = {
   ...variantsBase,
+  trash: true,
   versions: false,
   hooks: {
     ...variantsBase.hooks,
@@ -32,5 +33,26 @@ export const Variants: CollectionConfig = {
       },
     },
     ...variantsBase.fields,
+    {
+      name: 'costInPKREnabled',
+      type: 'checkbox',
+      defaultValue: false,
+      label: 'Track Cost (PKR)',
+      admin: {
+        description: 'Enable to record unit cost for Gross Profit reporting.',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'costInPKR',
+      type: 'number',
+      label: 'Cost (PKR)',
+      min: 0,
+      admin: {
+        condition: (_, siblingData) => Boolean(siblingData?.costInPKREnabled),
+        position: 'sidebar',
+        step: 0.01,
+      },
+    },
   ],
 }

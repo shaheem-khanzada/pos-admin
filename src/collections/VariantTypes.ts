@@ -13,6 +13,7 @@ const variantTypesBase = createVariantTypesCollection({
 
 export const VariantTypes: CollectionConfig = {
   ...variantTypesBase,
+  trash: true,
   hooks: {
     ...variantTypesBase.hooks,
     beforeChange: [...(variantTypesBase.hooks?.beforeChange || []), assignTenantFromHeader],

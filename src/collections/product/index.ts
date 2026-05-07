@@ -20,13 +20,14 @@ export const Products: CollectionConfig = {
   ...productsBase,
   /** Plugin defaults to drafts/autosave; POS does not need versioning. */
   versions: false,
+  trash: true,
   hooks: {
     ...productsBase.hooks,
     beforeChange: [...(productsBase.hooks?.beforeChange || []), assignTenantFromHeader],
   },
   admin: {
     ...productsBase.admin,
-    group: 'POS',
+    defaultColumns: ['title', 'barcode', 'createdAt'],
     useAsTitle: 'title',
   },
   fields: [
@@ -65,7 +66,6 @@ export const Products: CollectionConfig = {
     {
       name: 'media',
       type: 'relationship',
-      required: true,
       relationTo: 'media',
       hasMany: false,
       admin: {
@@ -73,6 +73,27 @@ export const Products: CollectionConfig = {
       },
     },
     ...productsBase.fields,
+    {
+      name: 'costInPKREnabled',
+      type: 'checkbox',
+      defaultValue: false,
+      label: 'Track Cost (PKR)',
+      admin: {
+        description: 'Enable to record unit cost for Gross Profit reporting.',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'costInPKR',
+      type: 'number',
+      label: 'Cost (PKR)',
+      min: 0,
+      admin: {
+        condition: (_, siblingData) => Boolean(siblingData?.costInPKREnabled),
+        position: 'sidebar',
+        step: 0.01,
+      },
+    },
     slugField(),
   ],
 }

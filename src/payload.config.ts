@@ -24,6 +24,7 @@ import { VariantOptions } from './collections/VariantOptions'
 import { Variants } from './collections/Variants'
 import { VariantTypes } from './collections/VariantTypes'
 import { isSuperAdmin } from './utils/access'
+import { initializeClickHouse } from './services/clickhouse'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -64,6 +65,7 @@ export default buildConfig({
   },
   db: mongooseAdapter({
     url: process.env.MONGODB_URI || '',
+    allowIDOnCreate: true,
     connectOptions: {
       dbName: 'pos-admin',
     },
@@ -106,4 +108,7 @@ export default buildConfig({
       },
     }),
   ],
+  onInit() {
+    initializeClickHouse()
+  },
 })

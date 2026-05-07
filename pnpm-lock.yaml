@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@clickhouse/client':
+        specifier: ^1.18.3
+        version: 1.18.3
       '@payloadcms/db-mongodb':
         specifier: 3.84.1
         version: 3.84.1(payload@3.84.1(graphql@16.13.2)(typescript@5.7.3))
@@ -377,6 +380,13 @@ packages:
 
   '@borewit/text-codec@0.2.2':
     resolution: {integrity: sha512-DDaRehssg1aNrH4+2hnj1B7vnUGEjU6OIlyRdkMd0aUdIUvKXrJfXsy8LVtXAy7DRvYVluWbMspsRhz2lcW0mQ==}
+
+  '@clickhouse/client-common@1.18.3':
+    resolution: {integrity: sha512-3axzO3zvrsGT5PzDenxgWscltYCNRDbhaHWUgdsmcM9OnW/VnZn9EarOcZogr9P82Z0mQh+Jd2x+p2K4TFD2fA==}
+
+  '@clickhouse/client@1.18.3':
+    resolution: {integrity: sha512-340ngdYktL8PLUBK2QKSwe0o02tYfZSz1mSn1uXCEU8TxHvwh9pnQxElf9YHumDGj5gX/IdgxPsJTGMs82Hgug==}
+    engines: {node: '>=16'}
 
   '@csstools/color-helpers@6.0.2':
     resolution: {integrity: sha512-LMGQLS9EuADloEFkcTBR3BwV/CGHV7zyDxVRtVDTwdI2Ca4it0CCVTT9wCkxSgokjE5Ho41hEPgb8OEUwoXr6Q==}
@@ -4905,6 +4915,12 @@ snapshots:
       '@babel/helper-validator-identifier': 7.28.5
 
   '@borewit/text-codec@0.2.2': {}
+
+  '@clickhouse/client-common@1.18.3': {}
+
+  '@clickhouse/client@1.18.3':
+    dependencies:
+      '@clickhouse/client-common': 1.18.3
 
   '@csstools/color-helpers@6.0.2': {}
 

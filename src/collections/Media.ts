@@ -4,6 +4,7 @@ import { assignTenantFromHeader } from '../hooks/assignTenantFromHeader'
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  trash: true,
   access: {
     read: () => true,
   },

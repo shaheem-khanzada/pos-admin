@@ -19,6 +19,7 @@
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
   },
   "dependencies": {
+    "@clickhouse/client": "^1.18.3",
     "@payloadcms/db-mongodb": "3.84.1",
     "@payloadcms/next": "3.84.1",
     "@payloadcms/plugin-ecommerce": "3.84.1",

@@ -4,6 +4,7 @@ import { assignTenantFromHeader } from '../hooks/assignTenantFromHeader'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
+  trash: true,
   admin: {
     useAsTitle: 'title',
     group: 'Content',
