@@ -44,8 +44,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  cors: ['http://localhost:3000', 'https://pos-admin-iota-three.vercel.app', 'http://y44ck4k0wwcogc4ccoogwsw4.72.60.192.24.sslip.io'],
-  csrf: ['http://localhost:3000', 'https://pos-admin-iota-three.vercel.app', 'http://y44ck4k0wwcogc4ccoogwsw4.72.60.192.24.sslip.io'],
+  cors: '*',
   collections: [Users, Media, Categories, Tenants, VariantTypes, VariantOptions, Products, Variants, Carts],
   upload: {
     limits: {
