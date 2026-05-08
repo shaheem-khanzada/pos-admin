@@ -6,6 +6,7 @@ import config from '@payload-config'
 
 type MenuVariant = {
   barcodeSuffix: string
+  costInPKR: number
   inventory: number
   optionIds: string[]
   priceInPKR: number
@@ -238,6 +239,8 @@ const ensureProduct = async (
       data: {
         barcode: product.barcode,
         categories: categoryIds,
+        costInPKR: product.variants[0]?.costInPKR || 0,
+        costInPKREnabled: true,
         enableVariants: true,
         inventory: 250,
         media: media.id,
@@ -256,6 +259,8 @@ const ensureProduct = async (
       title: product.title,
       barcode: product.barcode,
       categories: categoryIds,
+      costInPKR: product.variants[0]?.costInPKR || 0,
+      costInPKREnabled: true,
       enableVariants: true,
       inventory: 250,
       media: media.id,
@@ -288,6 +293,8 @@ const recreateVariants = async (
       collection: 'variants',
       data: {
         barcode: `${productBarcode}-${variant.barcodeSuffix}`,
+        costInPKR: variant.costInPKR,
+        costInPKREnabled: true,
         inventory: variant.inventory,
         options: variant.optionIds,
         priceInPKR: variant.priceInPKR,
@@ -329,8 +336,8 @@ const run = async () => {
       categories: ['Burgers'],
       variantTypeIds: [spiceType.id],
       variants: [
-        { barcodeSuffix: 'MILD', inventory: 80, optionIds: [spiceMild.id], priceInPKR: 690 },
-        { barcodeSuffix: 'HOT', inventory: 80, optionIds: [spiceHot.id], priceInPKR: 690 },
+        { barcodeSuffix: 'MILD', costInPKR: 360, inventory: 80, optionIds: [spiceMild.id], priceInPKR: 690 },
+        { barcodeSuffix: 'HOT', costInPKR: 360, inventory: 80, optionIds: [spiceHot.id], priceInPKR: 690 },
       ],
     },
     {
@@ -340,8 +347,8 @@ const run = async () => {
       categories: ['Burgers'],
       variantTypeIds: [spiceType.id],
       variants: [
-        { barcodeSuffix: 'MILD', inventory: 60, optionIds: [spiceMild.id], priceInPKR: 890 },
-        { barcodeSuffix: 'HOT', inventory: 60, optionIds: [spiceHot.id], priceInPKR: 890 },
+        { barcodeSuffix: 'MILD', costInPKR: 470, inventory: 60, optionIds: [spiceMild.id], priceInPKR: 890 },
+        { barcodeSuffix: 'HOT', costInPKR: 470, inventory: 60, optionIds: [spiceHot.id], priceInPKR: 890 },
       ],
     },
     {
@@ -351,8 +358,8 @@ const run = async () => {
       categories: ['Chicken'],
       variantTypeIds: [spiceType.id],
       variants: [
-        { barcodeSuffix: 'MILD', inventory: 50, optionIds: [spiceMild.id], priceInPKR: 720 },
-        { barcodeSuffix: 'HOT', inventory: 50, optionIds: [spiceHot.id], priceInPKR: 720 },
+        { barcodeSuffix: 'MILD', costInPKR: 380, inventory: 50, optionIds: [spiceMild.id], priceInPKR: 720 },
+        { barcodeSuffix: 'HOT', costInPKR: 380, inventory: 50, optionIds: [spiceHot.id], priceInPKR: 720 },
       ],
     },
     {
@@ -362,8 +369,8 @@ const run = async () => {
       categories: ['Buckets'],
       variantTypeIds: [spiceType.id],
       variants: [
-        { barcodeSuffix: 'MILD', inventory: 40, optionIds: [spiceMild.id], priceInPKR: 1790 },
-        { barcodeSuffix: 'HOT', inventory: 40, optionIds: [spiceHot.id], priceInPKR: 1790 },
+        { barcodeSuffix: 'MILD', costInPKR: 980, inventory: 40, optionIds: [spiceMild.id], priceInPKR: 1790 },
+        { barcodeSuffix: 'HOT', costInPKR: 980, inventory: 40, optionIds: [spiceHot.id], priceInPKR: 1790 },
       ],
     },
     {
@@ -373,8 +380,8 @@ const run = async () => {
       categories: ['Sides'],
       variantTypeIds: [sizeType.id],
       variants: [
-        { barcodeSuffix: 'REG', inventory: 120, optionIds: [sizeRegular.id], priceInPKR: 320 },
-        { barcodeSuffix: 'LRG', inventory: 120, optionIds: [sizeLarge.id], priceInPKR: 420 },
+        { barcodeSuffix: 'REG', costInPKR: 95, inventory: 120, optionIds: [sizeRegular.id], priceInPKR: 320 },
+        { barcodeSuffix: 'LRG', costInPKR: 120, inventory: 120, optionIds: [sizeLarge.id], priceInPKR: 420 },
       ],
     },
     {
@@ -384,9 +391,9 @@ const run = async () => {
       categories: ['Drinks'],
       variantTypeIds: [sizeType.id],
       variants: [
-        { barcodeSuffix: 'SML', inventory: 150, optionIds: [sizeSmall.id], priceInPKR: 150 },
-        { barcodeSuffix: 'REG', inventory: 150, optionIds: [sizeRegular.id], priceInPKR: 220 },
-        { barcodeSuffix: 'LRG', inventory: 150, optionIds: [sizeLarge.id], priceInPKR: 280 },
+        { barcodeSuffix: 'SML', costInPKR: 40, inventory: 150, optionIds: [sizeSmall.id], priceInPKR: 150 },
+        { barcodeSuffix: 'REG', costInPKR: 55, inventory: 150, optionIds: [sizeRegular.id], priceInPKR: 220 },
+        { barcodeSuffix: 'LRG', costInPKR: 70, inventory: 150, optionIds: [sizeLarge.id], priceInPKR: 280 },
       ],
     },
   ]
