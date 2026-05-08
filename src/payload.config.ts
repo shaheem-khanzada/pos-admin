@@ -44,7 +44,6 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  cors: '*',
   collections: [Users, Media, Categories, Tenants, VariantTypes, VariantOptions, Products, Variants, Carts],
   upload: {
     limits: {
