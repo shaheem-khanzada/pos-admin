@@ -112,11 +112,11 @@ export async function initializeClickHouse(): Promise<void> {
 
           currency LowCardinality(String) DEFAULT 'PKR',
 
-          subtotal Decimal(18, 2),
+          subtotal Int64,
 
-          discount Decimal(18, 2) DEFAULT 0,
+          discount Int64 DEFAULT 0,
 
-          total Decimal(18, 2),
+          total Int64,
 
           status LowCardinality(String),
 
@@ -141,13 +141,13 @@ export async function initializeClickHouse(): Promise<void> {
 
           quantity UInt32,
 
-          itemPrice Decimal(18, 2),
+          itemPrice Int64,
 
-          itemRevenue Decimal(18, 2),
+          itemRevenue Int64,
 
-          itemCogs Decimal(18, 2),
+          itemCogs Int64,
 
-          itemProfit Decimal(18, 2),
+          itemProfit Int64,
 
           createdAt DateTime64(3, 'UTC')
         )
@@ -172,7 +172,7 @@ export async function initializeClickHouse(): Promise<void> {
           paymentMethod LowCardinality(String),
 
           orders UInt32,
-          discount Decimal(18,2)
+          discount Int64
         )
         ENGINE = SummingMergeTree
         PARTITION BY toYYYYMM(createdAt)
@@ -190,8 +190,8 @@ export async function initializeClickHouse(): Promise<void> {
 
           paymentMethod LowCardinality(String),
 
-          revenue Decimal(18,2),
-          profit Decimal(18,2)
+          revenue Int64,
+          profit Int64
         )
         ENGINE = SummingMergeTree
         PARTITION BY toYYYYMM(createdAt)
@@ -210,8 +210,8 @@ export async function initializeClickHouse(): Promise<void> {
           productId String,
 
           quantity UInt32,
-          revenue Decimal(18,2),
-          profit Decimal(18,2)
+          revenue Int64,
+          profit Int64
         )
         ENGINE = SummingMergeTree
         PARTITION BY toYYYYMM(createdAt)

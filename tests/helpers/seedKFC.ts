@@ -3,6 +3,7 @@ import 'dotenv/config'
 import { getPayload } from 'payload'
 
 import config from '@payload-config'
+import { toPaisa } from '@/utils/money'
 
 type MenuVariant = {
   barcodeSuffix: string
@@ -239,12 +240,12 @@ const ensureProduct = async (
       data: {
         barcode: product.barcode,
         categories: categoryIds,
-        costInPKR: product.variants[0]?.costInPKR || 0,
+        costInPKR: toPaisa(product.variants[0]?.costInPKR || 0),
         costInPKREnabled: true,
         enableVariants: true,
         inventory: 250,
         media: media.id,
-        priceInPKR: product.variants[0]?.priceInPKR || 0,
+        priceInPKR: toPaisa(product.variants[0]?.priceInPKR || 0),
         priceInPKREnabled: true,
         tenant: tenantId,
         variantTypes: product.variantTypeIds,
@@ -259,12 +260,12 @@ const ensureProduct = async (
       title: product.title,
       barcode: product.barcode,
       categories: categoryIds,
-      costInPKR: product.variants[0]?.costInPKR || 0,
+      costInPKR: toPaisa(product.variants[0]?.costInPKR || 0),
       costInPKREnabled: true,
       enableVariants: true,
       inventory: 250,
       media: media.id,
-      priceInPKR: product.variants[0]?.priceInPKR || 0,
+      priceInPKR: toPaisa(product.variants[0]?.priceInPKR || 0),
       priceInPKREnabled: true,
       tenant: tenantId,
       variantTypes: product.variantTypeIds,
@@ -293,11 +294,11 @@ const recreateVariants = async (
       collection: 'variants',
       data: {
         barcode: `${productBarcode}-${variant.barcodeSuffix}`,
-        costInPKR: variant.costInPKR,
+        costInPKR: toPaisa(variant.costInPKR),
         costInPKREnabled: true,
         inventory: variant.inventory,
         options: variant.optionIds,
-        priceInPKR: variant.priceInPKR,
+        priceInPKR: toPaisa(variant.priceInPKR),
         priceInPKREnabled: true,
         product: productId,
         tenant: tenantId,

@@ -1,10 +1,10 @@
-import { createProductsCollection } from '@payloadcms/plugin-ecommerce'
+import { amountField, createProductsCollection } from '@payloadcms/plugin-ecommerce'
 import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
 import { isAuthenticatedAccess } from '../../utils/access'
 import { assignTenantFromHeader } from '../../hooks/assignTenantFromHeader'
-import { currenciesConfig } from '../shared'
+import { currenciesConfig, PKR } from '../shared'
 
 const productsBase = createProductsCollection({
   access: {
@@ -83,17 +83,19 @@ export const Products: CollectionConfig = {
         position: 'sidebar',
       },
     },
-    {
-      name: 'costInPKR',
-      type: 'number',
-      label: 'Cost (PKR)',
-      min: 0,
-      admin: {
-        condition: (_, siblingData) => Boolean(siblingData?.costInPKREnabled),
-        position: 'sidebar',
-        step: 0.01,
+    amountField({
+      currenciesConfig,
+      currency: PKR,
+      overrides: {
+        name: 'costInPKR',
+        label: 'Cost (PKR)',
+        min: 0,
+        admin: {
+          condition: (_, siblingData) => Boolean(siblingData?.costInPKREnabled),
+          position: 'sidebar',
+        },
       },
-    },
+    }),
     slugField(),
   ],
 }

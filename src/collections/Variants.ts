@@ -1,9 +1,9 @@
-import { createVariantsCollection } from '@payloadcms/plugin-ecommerce'
+import { amountField, createVariantsCollection } from '@payloadcms/plugin-ecommerce'
 import type { CollectionConfig } from 'payload'
 
 import { isAuthenticatedAccess } from '../utils/access'
 import { assignTenantFromHeader } from '../hooks/assignTenantFromHeader'
-import { currenciesConfig } from './shared'
+import { currenciesConfig, PKR } from './shared'
 
 const variantsBase = createVariantsCollection({
   access: {
@@ -43,16 +43,18 @@ export const Variants: CollectionConfig = {
         position: 'sidebar',
       },
     },
-    {
-      name: 'costInPKR',
-      type: 'number',
-      label: 'Cost (PKR)',
-      min: 0,
-      admin: {
-        condition: (_, siblingData) => Boolean(siblingData?.costInPKREnabled),
-        position: 'sidebar',
-        step: 0.01,
+    amountField({
+      currenciesConfig,
+      currency: PKR,
+      overrides: {
+        name: 'costInPKR',
+        label: 'Cost (PKR)',
+        min: 0,
+        admin: {
+          condition: (_, siblingData) => Boolean(siblingData?.costInPKREnabled),
+          position: 'sidebar',
+        },
       },
-    },
+    }),
   ],
 }

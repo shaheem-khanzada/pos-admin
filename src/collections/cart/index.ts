@@ -1,12 +1,13 @@
-import { createCartsCollection } from '@payloadcms/plugin-ecommerce'
+import { amountField, createCartsCollection } from '@payloadcms/plugin-ecommerce'
 import type { ArrayField, CollectionConfig, Field } from 'payload'
 
 import { isAuthenticatedAccess, superAdminFieldAccess } from '../../utils/access'
 import { assignTenantFromHeader } from '../../hooks/assignTenantFromHeader'
-import { currenciesConfig } from '../shared'
-import { decrementInventoryAfterCartChange } from './hooks/decrementInventoryAfterCartChange'
+import { currenciesConfig, PKR } from '../shared'
 import { insertOrderAnalyticAfterCartChange } from './hooks/insertOrderAnalyticAfterCartChange'
+import { restoreInventoryAfterCartDelete } from './hooks/restoreInventoryAfterCartDelete'
 import { snapshotCartItemPricing } from './hooks/snapshotCartItemPricing'
+import { updateInventoryAfterCartChange } from './hooks/updateInventoryAfterCartChange'
 
 const cartsBase = createCartsCollection({
   access: {
@@ -40,28 +41,32 @@ const extendedFields: Field[] = cartsBase.fields
         ...itemsField,
         fields: [
           ...itemsField.fields,
-          {
-            name: 'unitPriceInPKR',
-            type: 'number',
-            label: 'Unit Price (PKR)',
-            defaultValue: 0,
-            min: 0,
-            admin: {
-              readOnly: true,
-              step: 0.01,
+          amountField({
+            currenciesConfig,
+            currency: PKR,
+            overrides: {
+              name: 'unitPriceInPKR',
+              label: 'Unit Price (PKR)',
+              defaultValue: 0,
+              min: 0,
+              admin: {
+                readOnly: true,
+              },
             },
-          },
-          {
-            name: 'unitCostInPKR',
-            type: 'number',
-            label: 'Unit Cost (PKR)',
-            defaultValue: 0,
-            min: 0,
-            admin: {
-              readOnly: true,
-              step: 0.01,
+          }),
+          amountField({
+            currenciesConfig,
+            currency: PKR,
+            overrides: {
+              name: 'unitCostInPKR',
+              label: 'Unit Cost (PKR)',
+              defaultValue: 0,
+              min: 0,
+              admin: {
+                readOnly: true,
+              },
             },
-          },
+          }),
         ],
       }
     }
@@ -80,40 +85,44 @@ export const Carts: CollectionConfig = {
     ],
     afterChange: [
       ...(cartsBase.hooks?.afterChange || []),
-      decrementInventoryAfterCartChange,
+      updateInventoryAfterCartChange,
       insertOrderAnalyticAfterCartChange,
     ],
+    afterDelete: [...(cartsBase.hooks?.afterDelete || []), restoreInventoryAfterCartDelete],
   },
   fields: [
     ...extendedFields,
-    {
-      name: 'cogsTotal',
-      type: 'number',
-      label: 'COGS Total (PKR)',
-      defaultValue: 0,
-      min: 0,
-      admin: {
-        position: 'sidebar',
-        readOnly: true,
-        step: 0.01,
+    amountField({
+      currenciesConfig,
+      currency: PKR,
+      overrides: {
+        name: 'cogsTotal',
+        label: 'COGS Total (PKR)',
+        defaultValue: 0,
+        min: 0,
+        admin: {
+          position: 'sidebar',
+          readOnly: true,
+        },
       },
-    },
-    {
-      name: 'grossProfit',
-      type: 'number',
-      label: 'Gross Profit (PKR)',
-      defaultValue: 0,
-      min: 0,
-      admin: {
-        position: 'sidebar',
-        readOnly: true,
-        step: 0.01,
+    }),
+    amountField({
+      currenciesConfig,
+      currency: PKR,
+      overrides: {
+        name: 'grossProfit',
+        label: 'Gross Profit (PKR)',
+        defaultValue: 0,
+        admin: {
+          position: 'sidebar',
+          readOnly: true,
+        },
       },
-    },
+    }),
     {
       name: 'customerName',
       type: 'text',
-      defaultValue: 'Guest',
+      defaultValue: 'Walk-in Customer',
       admin: {
         position: 'sidebar',
       },
@@ -125,17 +134,33 @@ export const Carts: CollectionConfig = {
         position: 'sidebar',
       },
     },
-    {
-      name: 'discount',
-      type: 'number',
-      label: 'Discount (PKR)',
-      defaultValue: 0,
-      min: 0,
-      admin: {
-        position: 'sidebar',
-        step: 0.01,
+    amountField({
+      currenciesConfig,
+      currency: PKR,
+      overrides: {
+        name: 'discount',
+        label: 'Discount (PKR)',
+        defaultValue: 0,
+        min: 0,
+        admin: {
+          position: 'sidebar',
+        },
       },
-    },
+    }),
+    amountField({
+      currenciesConfig,
+      currency: PKR,
+      overrides: {
+        name: 'total',
+        label: 'Total (PKR)',
+        defaultValue: 0,
+        min: 0,
+        admin: {
+          position: 'sidebar',
+          readOnly: true,
+        },
+      },
+    }),
     {
       name: 'paymentMethod',
       type: 'select',
@@ -147,6 +172,7 @@ export const Carts: CollectionConfig = {
       options: [
         { label: 'Cash', value: 'cash' },
         { label: 'Online', value: 'online' },
+        { label: 'Card', value: 'card' },
       ],
     },
   ],

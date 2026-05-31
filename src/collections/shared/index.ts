@@ -1,5 +1,5 @@
 /** Pakistani Rupee — single currency for this POS. */
-const PKR = {
+export const PKR = {
   code: 'PKR',
   decimals: 2,
   label: 'Pakistani Rupee',

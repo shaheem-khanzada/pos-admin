@@ -37,6 +37,7 @@ export type AnalyticOrderBuild = {
 
 /**
  * Map a Payload cart to ClickHouse JSONEachRow shapes for orders + items.
+ * All money fields are stored in paisa (same as Mongo). Convert with toRupees at read time.
  * Returns `null` when the cart has no tenant (nothing to attribute).
  */
 export function builderAnalyticOrder(cart: Cart): AnalyticOrderBuild | null {
@@ -47,6 +48,7 @@ export function builderAnalyticOrder(cart: Cart): AnalyticOrderBuild | null {
   const createdAt = toClickHouseDateTime(new Date(cart.createdAt).toISOString())
   const subtotal = Number(cart.subtotal ?? 0)
   const discount = Number(cart.discount ?? 0)
+  const total = Number(cart.total ?? subtotal - discount)
 
   const orderRow: AnalyticOrderRow = {
     createdAt,
@@ -57,7 +59,7 @@ export function builderAnalyticOrder(cart: Cart): AnalyticOrderBuild | null {
     status: cart.status,
     subtotal,
     tenant,
-    total: subtotal - discount,
+    total,
   }
 
   const lines = cart.items ?? []

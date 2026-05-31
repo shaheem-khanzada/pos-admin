@@ -5,7 +5,7 @@ const ORDERS = 'easy_pos_daily_orders'
 const ITEMS = 'easy_pos_daily_items'
 const PRODUCTS = 'easy_pos_daily_product_analytics'
 
-function num(v: any) {
+function num(v: unknown) {
   const n = Number(v)
   return Number.isFinite(n) ? n : 0
 }
@@ -182,7 +182,7 @@ export async function GET(req: Request) {
 
     const row = (await kpiRes.json()).data[0] || {}
 
-    const format = (c: any, p: any) => ({
+    const format = (c: Record<string, unknown>, p: Record<string, unknown>) => ({
       orders: num(c.orders),
       revenue: num(c.revenue),
       profit: num(c.profit),
@@ -196,7 +196,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({
       success: true,
-      meta: { timezone: tz },
+      meta: { timezone: tz, moneyUnit: 'paisa' },
       data: {
         today: format(
           { orders: row.t_orders, revenue: row.t_revenue, profit: row.t_profit, discount: row.t_discount },

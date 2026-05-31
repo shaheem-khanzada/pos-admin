@@ -338,7 +338,8 @@ export interface Cart {
   customerName?: string | null;
   customerPhone?: string | null;
   discount?: number | null;
-  paymentMethod: 'cash' | 'online';
+  total?: number | null;
+  paymentMethod: 'cash' | 'online' | 'card';
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -611,6 +612,7 @@ export interface CartsSelect<T extends boolean = true> {
   customerName?: T;
   customerPhone?: T;
   discount?: T;
+  total?: T;
   paymentMethod?: T;
   updatedAt?: T;
   createdAt?: T;
