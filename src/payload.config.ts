@@ -7,6 +7,7 @@ import sharp from 'sharp'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
 import { en } from '@payloadcms/plugin-ecommerce/translations/languages/en'
+import { migrations } from '@/migrations'
 
 import {
   canCreateTenantCollection,
@@ -16,6 +17,7 @@ import {
 } from './access/tenant-collections'
 import { Carts } from './collections/cart'
 import { Categories } from './collections/Categories'
+import { Expenses } from './collections/Expenses'
 import { Media } from './collections/Media'
 import { Tenants } from './collections/Tenants'
 import { Users } from './collections/Users'
@@ -44,7 +46,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Categories, Tenants, VariantTypes, VariantOptions, Products, Variants, Carts],
+  collections: [Users, Media, Categories, Tenants, VariantTypes, VariantOptions, Products, Variants, Carts, Expenses],
   upload: {
     limits: {
       fileSize: 10000000, // 10MB, written in bytes
@@ -64,6 +66,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.MONGODB_URI || '',
     allowIDOnCreate: true,
+    prodMigrations: migrations,
     connectOptions: {
       dbName: 'pos-admin',
     },
@@ -75,6 +78,7 @@ export default buildConfig({
         products: { accessResultOverride: tenantCollectionAccessOverride },
         variants: { accessResultOverride: tenantCollectionAccessOverride },
         carts: { accessResultOverride: tenantCollectionAccessOverride },
+        expenses: { accessResultOverride: tenantCollectionAccessOverride },
         media: {},
         categories: { accessResultOverride: tenantCollectionAccessOverride },
         variantTypes: { accessResultOverride: tenantCollectionAccessOverride },

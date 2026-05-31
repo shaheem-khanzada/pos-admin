@@ -76,6 +76,7 @@ export interface Config {
     products: Product;
     variants: Variant;
     carts: Cart;
+    expenses: Expense;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -99,6 +100,7 @@ export interface Config {
     products: ProductsSelect<false> | ProductsSelect<true>;
     variants: VariantsSelect<false> | VariantsSelect<true>;
     carts: CartsSelect<false> | CartsSelect<true>;
+    expenses: ExpensesSelect<false> | ExpensesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -346,6 +348,22 @@ export interface Cart {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expenses".
+ */
+export interface Expense {
+  id: string;
+  tenant?: (string | null) | Tenant;
+  title: string;
+  amountInPKR: number;
+  category: 'rent' | 'utilities' | 'supplies' | 'salaries' | 'marketing' | 'maintenance' | 'misc';
+  expenseAt: string;
+  paymentMethod: 'cash' | 'online' | 'card';
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -403,6 +421,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'carts';
         value: string | Cart;
+      } | null)
+    | ({
+        relationTo: 'expenses';
+        value: string | Expense;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -613,6 +635,21 @@ export interface CartsSelect<T extends boolean = true> {
   customerPhone?: T;
   discount?: T;
   total?: T;
+  paymentMethod?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expenses_select".
+ */
+export interface ExpensesSelect<T extends boolean = true> {
+  tenant?: T;
+  title?: T;
+  amountInPKR?: T;
+  category?: T;
+  expenseAt?: T;
   paymentMethod?: T;
   updatedAt?: T;
   createdAt?: T;

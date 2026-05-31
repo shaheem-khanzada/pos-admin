@@ -49,27 +49,41 @@ export const applyCartInventoryDeltas = async (
 ) => {
   for (const [id, delta] of Object.entries(deltas.variantDeltas)) {
     if (delta === 0) continue
-
-    await req.payload.db.updateOne({
-      id,
-      collection: 'variants',
-      data: {
-        inventory: { $inc: delta },
-      },
-      req,
-    })
+    await applyInventoryDelta(req, 'variants', id, delta)
   }
 
   for (const [id, delta] of Object.entries(deltas.productDeltas)) {
     if (delta === 0) continue
-
-    await req.payload.db.updateOne({
-      id,
-      collection: 'products',
-      data: {
-        inventory: { $inc: delta },
-      },
-      req,
-    })
+    await applyInventoryDelta(req, 'products', id, delta)
   }
+}
+
+// TODO: Replace read-clamp-set with atomic MongoDB update (e.g. aggregation pipeline
+// $max + $add) once we bypass Payload's db.updateOne — it only supports $inc today.
+async function applyInventoryDelta(
+  req: PayloadRequest,
+  collection: 'products' | 'variants',
+  id: string,
+  delta: number,
+) {
+  const doc = await req.payload.findByID({
+    collection,
+    id,
+    depth: 0,
+    overrideAccess: true,
+    req,
+    select: { inventory: true },
+  })
+
+  const current = typeof doc.inventory === 'number' ? doc.inventory : 0
+  const next = Math.max(0, current + delta)
+
+  if (next === current) return
+
+  await req.payload.db.updateOne({
+    id,
+    collection,
+    data: { inventory: next },
+    req,
+  })
 }
