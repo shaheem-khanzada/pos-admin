@@ -278,11 +278,6 @@ export interface Product {
    */
   costInPKREnabled?: boolean | null;
   costInPKR?: number | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -583,8 +578,6 @@ export interface ProductsSelect<T extends boolean = true> {
   priceInPKR?: T;
   costInPKREnabled?: T;
   costInPKR?: T;
-  generateSlug?: T;
-  slug?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
