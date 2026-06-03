@@ -48,6 +48,7 @@ export default buildConfig({
   },
   collections: [Users, Media, Categories, Tenants, VariantTypes, VariantOptions, Products, Variants, Carts, Expenses],
   upload: {
+    uploadTimeout: 120000, // 2 minutes
     limits: {
       fileSize: 10000000, // 10MB, written in bytes
     },

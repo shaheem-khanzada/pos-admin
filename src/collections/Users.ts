@@ -15,7 +15,7 @@ export const Users: CollectionConfig = {
   },
   auth: {
     useSessions: true,
-    tokenExpiration: 7 * 24 * 60 * 60, // 7 days
+    tokenExpiration: 5 * 30 * 24 * 60 * 60, // 5 months (~150 days)
   },
   fields: [
     {
