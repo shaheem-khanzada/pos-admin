@@ -15,7 +15,7 @@ type MenuVariant = {
 
 type MenuProduct = {
   barcode: string
-  categories: string[]
+  category: string
   mediaAlt: string
   title: string
   variantTypeIds: string[]
@@ -219,7 +219,10 @@ const ensureProduct = async (
   categoryMap: Record<string, string>,
 ): Promise<any> => {
   const media = await ensureMedia(payload, tenantId, product.mediaAlt)
-  const categoryIds = product.categories.map((category) => categoryMap[category]).filter(Boolean)
+  const categoryId = categoryMap[product.category]
+  if (!categoryId) {
+    throw new Error(`Missing category "${product.category}" for product "${product.title}"`)
+  }
 
   const existing = await payload.find({
     ...adminOpOptions,
@@ -239,7 +242,7 @@ const ensureProduct = async (
       id: existing.docs[0].id,
       data: {
         barcode: product.barcode,
-        categories: categoryIds,
+        category: categoryId,
         costInPKR: toPaisa(product.variants[0]?.costInPKR || 0),
         costInPKREnabled: true,
         enableVariants: true,
@@ -259,7 +262,7 @@ const ensureProduct = async (
     data: {
       title: product.title,
       barcode: product.barcode,
-      categories: categoryIds,
+      category: categoryId,
       costInPKR: toPaisa(product.variants[0]?.costInPKR || 0),
       costInPKREnabled: true,
       enableVariants: true,
@@ -334,7 +337,7 @@ const run = async () => {
       title: 'Zinger Burger',
       barcode: 'KFC-ZINGER',
       mediaAlt: 'KFC Zinger Burger',
-      categories: ['Burgers'],
+      category: 'Burgers',
       variantTypeIds: [spiceType.id],
       variants: [
         { barcodeSuffix: 'MILD', costInPKR: 360, inventory: 80, optionIds: [spiceMild.id], priceInPKR: 690 },
@@ -345,7 +348,7 @@ const run = async () => {
       title: 'Mighty Zinger',
       barcode: 'KFC-MIGHTY',
       mediaAlt: 'KFC Mighty Zinger',
-      categories: ['Burgers'],
+      category: 'Burgers',
       variantTypeIds: [spiceType.id],
       variants: [
         { barcodeSuffix: 'MILD', costInPKR: 470, inventory: 60, optionIds: [spiceMild.id], priceInPKR: 890 },
@@ -356,7 +359,7 @@ const run = async () => {
       title: 'Hot Wings (8 Pcs)',
       barcode: 'KFC-WINGS-8',
       mediaAlt: 'KFC Hot Wings 8 Pieces',
-      categories: ['Chicken'],
+      category: 'Chicken',
       variantTypeIds: [spiceType.id],
       variants: [
         { barcodeSuffix: 'MILD', costInPKR: 380, inventory: 50, optionIds: [spiceMild.id], priceInPKR: 720 },
@@ -367,7 +370,7 @@ const run = async () => {
       title: 'Chicken Bucket (6 Pcs)',
       barcode: 'KFC-BUCKET-6',
       mediaAlt: 'KFC Chicken Bucket 6 Pieces',
-      categories: ['Buckets'],
+      category: 'Buckets',
       variantTypeIds: [spiceType.id],
       variants: [
         { barcodeSuffix: 'MILD', costInPKR: 980, inventory: 40, optionIds: [spiceMild.id], priceInPKR: 1790 },
@@ -378,7 +381,7 @@ const run = async () => {
       title: 'Fries',
       barcode: 'KFC-FRIES',
       mediaAlt: 'KFC Fries',
-      categories: ['Sides'],
+      category: 'Sides',
       variantTypeIds: [sizeType.id],
       variants: [
         { barcodeSuffix: 'REG', costInPKR: 95, inventory: 120, optionIds: [sizeRegular.id], priceInPKR: 320 },
@@ -389,7 +392,7 @@ const run = async () => {
       title: 'Pepsi',
       barcode: 'KFC-PEPSI',
       mediaAlt: 'KFC Pepsi',
-      categories: ['Drinks'],
+      category: 'Drinks',
       variantTypeIds: [sizeType.id],
       variants: [
         { barcodeSuffix: 'SML', costInPKR: 40, inventory: 150, optionIds: [sizeSmall.id], priceInPKR: 150 },
