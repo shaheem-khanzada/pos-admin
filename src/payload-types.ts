@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     categories: Category;
     tenants: Tenant;
+    'store-members': StoreMember;
     variantTypes: VariantType;
     variantOptions: VariantOption;
     products: Product;
@@ -95,6 +96,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
+    'store-members': StoreMembersSelect<false> | StoreMembersSelect<true>;
     variantTypes: VariantTypesSelect<false> | VariantTypesSelect<true>;
     variantOptions: VariantOptionsSelect<false> | VariantOptionsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
@@ -214,6 +216,58 @@ export interface Category {
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "store-members".
+ */
+export interface StoreMember {
+  id: string;
+  tenant?: (string | null) | Tenant;
+  user: string | User;
+  displayName?: string | null;
+  status: 'active' | 'suspended';
+  isOwner?: boolean | null;
+  permissions?: {
+    products?: {
+      read?: boolean | null;
+      create?: boolean | null;
+      update?: boolean | null;
+      delete?: boolean | null;
+    };
+    orders?: {
+      read?: boolean | null;
+      create?: boolean | null;
+      update?: boolean | null;
+      delete?: boolean | null;
+      discount?: boolean | null;
+      refund?: boolean | null;
+    };
+    expenses?: {
+      read?: boolean | null;
+      create?: boolean | null;
+      update?: boolean | null;
+      delete?: boolean | null;
+    };
+    reports?: {
+      read?: boolean | null;
+    };
+    inventory?: {
+      read?: boolean | null;
+      adjust?: boolean | null;
+    };
+    employees?: {
+      read?: boolean | null;
+      updatePermissions?: boolean | null;
+      suspend?: boolean | null;
+    };
+    settings?: {
+      read?: boolean | null;
+      update?: boolean | null;
+    };
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -398,6 +452,10 @@ export interface PayloadLockedDocument {
         value: string | Tenant;
       } | null)
     | ({
+        relationTo: 'store-members';
+        value: string | StoreMember;
+      } | null)
+    | ({
         relationTo: 'variantTypes';
         value: string | VariantType;
       } | null)
@@ -529,6 +587,73 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface TenantsSelect<T extends boolean = true> {
   name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "store-members_select".
+ */
+export interface StoreMembersSelect<T extends boolean = true> {
+  tenant?: T;
+  user?: T;
+  displayName?: T;
+  status?: T;
+  isOwner?: T;
+  permissions?:
+    | T
+    | {
+        products?:
+          | T
+          | {
+              read?: T;
+              create?: T;
+              update?: T;
+              delete?: T;
+            };
+        orders?:
+          | T
+          | {
+              read?: T;
+              create?: T;
+              update?: T;
+              delete?: T;
+              discount?: T;
+              refund?: T;
+            };
+        expenses?:
+          | T
+          | {
+              read?: T;
+              create?: T;
+              update?: T;
+              delete?: T;
+            };
+        reports?:
+          | T
+          | {
+              read?: T;
+            };
+        inventory?:
+          | T
+          | {
+              read?: T;
+              adjust?: T;
+            };
+        employees?:
+          | T
+          | {
+              read?: T;
+              updatePermissions?: T;
+              suspend?: T;
+            };
+        settings?:
+          | T
+          | {
+              read?: T;
+              update?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
 }

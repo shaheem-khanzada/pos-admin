@@ -8,7 +8,6 @@ import { s3Storage } from '@payloadcms/storage-s3'
 import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
 import { en } from '@payloadcms/plugin-ecommerce/translations/languages/en'
 import { migrations } from '@/migrations'
-
 import {
   canCreateTenantCollection,
   canDeleteTenantCollection,
@@ -22,6 +21,7 @@ import { Media } from './collections/Media'
 import { Tenants } from './collections/Tenants'
 import { Users } from './collections/Users'
 import { Products } from './collections/product'
+import { StoreMembers } from './collections/StoreMembers'
 import { VariantOptions } from './collections/VariantOptions'
 import { Variants } from './collections/Variants'
 import { VariantTypes } from './collections/VariantTypes'
@@ -46,7 +46,19 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Categories, Tenants, VariantTypes, VariantOptions, Products, Variants, Carts, Expenses],
+  collections: [
+    Users,
+    Media,
+    Categories,
+    Tenants,
+    StoreMembers,
+    VariantTypes,
+    VariantOptions,
+    Products,
+    Variants,
+    Carts,
+    Expenses,
+  ],
   upload: {
     uploadTimeout: 120000, // 2 minutes
     limits: {
@@ -82,6 +94,7 @@ export default buildConfig({
         expenses: { accessResultOverride: tenantCollectionAccessOverride },
         media: {},
         categories: { accessResultOverride: tenantCollectionAccessOverride },
+        'store-members': {},
         variantTypes: { accessResultOverride: tenantCollectionAccessOverride },
         variantOptions: { accessResultOverride: tenantCollectionAccessOverride },
       },
