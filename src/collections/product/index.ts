@@ -52,14 +52,13 @@ export const Products: CollectionConfig = {
       label: 'Description',
     },
     {
-      name: 'categories',
+      name: 'category',
       type: 'relationship',
       required: true,
       admin: {
         position: 'sidebar',
         sortOptions: 'title',
       },
-      hasMany: true,
       relationTo: 'categories',
     },
     {

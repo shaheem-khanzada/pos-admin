@@ -261,7 +261,7 @@ export interface Product {
   title: string;
   barcode?: string | null;
   description?: string | null;
-  categories: (string | Category)[];
+  category: string | Category;
   media?: (string | null) | Media;
   inventory?: number | null;
   enableVariants?: boolean | null;
@@ -568,7 +568,7 @@ export interface ProductsSelect<T extends boolean = true> {
   title?: T;
   barcode?: T;
   description?: T;
-  categories?: T;
+  category?: T;
   media?: T;
   inventory?: T;
   enableVariants?: T;
